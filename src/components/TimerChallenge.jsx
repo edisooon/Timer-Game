@@ -10,8 +10,7 @@ export default function TimerChallenge({ title, targetTime }) {
 
   const isRunning = remainingTime > 0 && remainingTime < targetTimeInMillis;
   if (remainingTime == 0) {
-    clearInterval(timerRef.current);
-    setRemainingTime(targetTimeInMillis);
+    handleGameEnd();
   }
 
   function handleStart() {
@@ -21,13 +20,26 @@ export default function TimerChallenge({ title, targetTime }) {
   }
 
   function handleStop() {
+    handleGameEnd();
+  }
+
+  function handleGameEnd() {
     clearInterval(timerRef.current);
+    dialogRef.current.open();
+  }
+
+  function handleResetRemainingTime() {
     setRemainingTime(targetTimeInMillis);
   }
 
   return (
     <>
-      <ResultModal result="lost" targetTime={targetTime} ref={dialogRef} />
+      <ResultModal
+        remainingTime={remainingTime}
+        targetTime={targetTime}
+        ref={dialogRef}
+        onResetRemainingTime={handleResetRemainingTime}
+      />
       <section className="challenge">
         <h2>{title}</h2>
         <p className="challenge-time">
